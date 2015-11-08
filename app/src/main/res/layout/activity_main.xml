@@ -21,12 +21,14 @@
         android:id="@+id/btnJson"
         android:layout_width="240dp"
         android:layout_height="wrap_content"
-        android:text="Parse JSON" />
+        android:text="Parse JSON"
+        android:visibility="gone"/>
 
     <TextView
         android:id="@+id/tvJson"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
 
     <Button
         android:id="@+id/btnJsonNative"
@@ -49,6 +51,18 @@
 
     <TextView
         android:id="@+id/tvFlat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/btnDeserialize"
+        android:layout_width="240dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Binary2JSON" />
+
+    <TextView
+        android:id="@+id/tvDeserialize"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 

@@ -31,4 +31,32 @@ Java_frogermcs_io_flatbuffersparser_FlatBuffersParser_parseJsonNative(JNIEnv *en
     }
 }
 
+
+JNIEXPORT jbyteArray JNICALL
+Java_frogermcs_io_flatbuffersparser_FlatBuffersParser_parseBinaryNative(JNIEnv *env,
+                                                                      jobject instance,
+                                                                      jbyteArray binary_,
+                                                                      jstring schema_) {
+
+    const char *schema = env->GetStringUTFChars(schema_, 0);
+
+    flatbuffers::Parser parser;
+    bool ok = parser.Parse(schema);
+
+    if(ok) {
+        env->ReleaseStringUTFChars(schema_, schema);
+        std::string jsongen;
+        flatbuffers::GeneratorOptions opts;
+
+        GenerateText(parser, &binary_, opts, &jsongen);
+
+        flatbuffers::uoffset_t length = jsongen.length();
+        jbyteArray result = env->NewByteArray(length);
+        env->SetByteArrayRegion(result, 0, length, (jbyte *) jsongen.c_str());
+        return result;
+
+    }
+
+}
+
 #endif // __MAIN_H__

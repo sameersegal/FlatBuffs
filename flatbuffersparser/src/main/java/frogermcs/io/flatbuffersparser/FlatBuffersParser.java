@@ -16,5 +16,12 @@ public class FlatBuffersParser {
         return ByteBuffer.wrap(bytes);
     }
 
+    public String parseBinary(byte[] binary, String schema) {
+        final byte[] bytes = parseBinaryNative(binary, schema);
+        return new String(bytes);
+    }
+
     private native byte[] parseJsonNative(String json, String schema);
+
+    private native byte[] parseBinaryNative(byte[] binary, String schema);
 }

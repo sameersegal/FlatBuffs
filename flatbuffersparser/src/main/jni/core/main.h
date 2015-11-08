@@ -12,4 +12,12 @@ JNIEXPORT jbyteArray JNICALL
                                                                               jobject instance,
                                                                               jstring json_,
                                                                               jstring schema_);
+
+
+JNIEXPORT jbyteArray JNICALL
+        Java_frogermcs_io_flatbuffersparser_FlatBuffersParser_parseBinaryNative(JNIEnv *env,
+                                                                                jobject instance,
+                                                                                jbyteArray binary_,
+                                                                                jstring schema_);
+
 }

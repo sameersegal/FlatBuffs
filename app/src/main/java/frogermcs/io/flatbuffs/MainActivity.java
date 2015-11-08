@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -30,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
     TextView tvJson;
     @Bind(R.id.tvJsonNative)
     TextView tvJsonNative;
+    @Bind(R.id.tvDeserialize)
+    TextView tvDeserialize;
 
     private RawDataReader rawDataReader;
     private FlatBuffersParser flatBuffersParser;
@@ -49,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.btnJson)
     public void onJsonClick() {
-        rawDataReader.loadString(R.raw.repos_json).subscribe(new SimpleObserver<String>() {
+        rawDataReader.loadString(R.raw.repos_flat).subscribe(new SimpleObserver<String>() {
             @Override
             public void onNext(String reposStr) {
                 parseReposListJson(reposStr);
@@ -118,5 +121,27 @@ public class MainActivity extends AppCompatActivity {
 
         long endTime = System.currentTimeMillis() - startTime;
         tvJsonNative.setText("Elements: " + reposListFlatParsed.reposLength() + ": load time: " + endTime + "ms");
+    }
+
+    @OnClick(R.id.btnDeserialize)
+    public void onDeserializeClic() {
+        Observable.combineLatest(
+                rawDataReader.loadBytes(R.raw.repos_flat),
+                rawDataReader.loadString(R.raw.repos_schema),
+                new Func2<byte[], String, Object>() {
+                    @Override
+                    public Object call(byte[] binary, String schema) {
+                        parseSchemaToJson(binary, schema);
+                        return reposListFlatParsed;
+                    }
+                }
+        ).subscribe();
+    }
+
+    private void parseSchemaToJson(byte[] data, String schema) {
+        long startTime = System.currentTimeMillis();
+        String json = flatBuffersParser.parseBinary(data, schema);
+        long endTime = System.currentTimeMillis() - startTime;
+        tvDeserialize.setText("Elements: " + reposListJson.repos.size() + ": load time: " + endTime + "ms" + "\n" + json);
     }
 }
